@@ -1,0 +1,9 @@
+ipython==5.3.0
+matplotlib==2.0.0
+jinja2==2.9.6
+Jupyter
+requests
+numpy
+pandas
+types
+
