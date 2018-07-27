@@ -1,8 +1,12 @@
 ## 基本说明
 此报告已经上传[github](https://github.com/LinshuZhang/automate-report)，clone下来之后查看更为方便。
+
 谢绝转载。
+
 本教程对知识水平要求不高，主要是把日常制作报告进行自动化的工作流程做了个整理，可以作为一种思路分享。
+
 主要可以使用python自动生成HTML或者pdf格式的分析报告。
+
 此外其中图表制作部分为用Python制作Excel形式表格做出了教程和示例，为office制作的报告升级为Python自动化制作提供既有的模板。
 
 ## 环境配置(可直接复制粘贴到终端中运行)
