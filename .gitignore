@@ -28,6 +28,5 @@ Temporary Items
 __pycache__
 *.pyc
 *.csv
-image/*.png
-image/*.jpg
+image/*
 .ipynb_checkpoints
