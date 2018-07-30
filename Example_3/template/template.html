@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+</head>
+<style>
+/*body {font-size:75%;}*/
+.rich-text {max-width:960px}
+table tr td { border:1px solid #000000;padding-right: 0.5em;padding-left: 0.5em;font-size:0.9em}
+table{margin: auto; text-align:center; border-collapse: collapse}
+th{border:1px solid #000000; padding-right: 0.5em;padding-left: 0.5em}
+div{text-align: center}
+h1{font-size: 1.4em;}
+.subtitle {font-size: 1.33em;text-align: right;}
+h2{font-size: 1.2em;}
+h3{font-size: 1em;}
+div img{width:34.252em;height: auto;display:inline-block;}
+table img{max-height: 1cm}
+table + div{margin: 1.5em 0em 0em 0em;}
+p{text-align: left;}
+</style>
+<body>
+<section class = "rich-text">
+<h1>{{ document.title }}</h1>
+<p>{{ document.foreword }}</p>
+
+{% for chapter in document.chapters %}
+    <h2>{{ chapter.title }}</h2>
+    {%- if chapter.foreword -%}
+    <p>{{ chapter.foreword }}</p>
+    {%- endif -%}
+    <p>{{ chapter.content }}</p>
+    {% if not chapter.table is none %}
+    {% set table = chapter.table %}
+        <table>
+            <tr class='chapter_table'>
+            {% for column in table.columns %}
+            <th>{{column}}</th>
+            {% endfor %}
+            </tr>
+            {% for index in table.index %}
+                <tr>
+                {% for column in table.columns %}
+                    <td>{{ table[column][index] }}</td>
+                {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+    {% for subchapter in chapter.chapters %}
+        {% if not subchapter.title is none %}
+            <h3>{{ subchapter.title }}</h3>
+            {%- if not subchapter.foreword is none %}
+                <p>{{ subchapter.foreword }}</p>
+            {% endif %}
+            {% if not subchapter.table is none %}
+                {% set table = subchapter.table %}
+                <table>
+                    <tr class='chapter_table'>
+                    {% for column in table.columns %}
+                    <th>{{column}}</th>
+                    {% endfor %}
+                    </tr>
+                    {% for index in table.index %}
+                        <tr>
+                        {% for column in table.columns %}
+                            <td>{{ table[column][index] }}</td>
+                        {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+
+            {% if not subchapter.image is none %}
+                {% set image = subchapter.image %}
+                <div><img src="{{ image }}"></div>
+            {% endif %}
+
+            <p>{{ subchapter.content }}</p>
+        {% endif %}
+    {% endfor %}
+
+{% endfor %}
+</section>
+</body>
+</html>
