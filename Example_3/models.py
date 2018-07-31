@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from jinja2 import Template
+import jinja2
 import configs
 
 class Document(object):
@@ -27,8 +27,8 @@ class Document(object):
     def save_html(self, html_name):
         with open('./template/template.html') as f:
             templ = f.read()
-        t = Template(templ)
-        html = t.render(document=self)
+        env = jinja2.Environment(extensions=['jinja2.ext.do'])
+        html = env.from_string(templ).render(document=self)
         with open(html_name,'w') as f:
             f.write(html)
 

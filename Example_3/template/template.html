@@ -24,12 +24,15 @@ p{text-align: left;}
 <h1>{{ document.title }}</h1>
 <p>{{ document.foreword }}</p>
 
-{% for chapter in document.chapters %}
-    <h2>{{ chapter.title }}</h2>
-    {%- if chapter.foreword -%}
-    <p>{{ chapter.foreword }}</p>
+{%- set idxs = [0] -%}
+{% for chapter in document.chapters recursive %}
+    {%- set depth=idxs|length -%}
+    {%- if not chapter.title is none %}
+        <h{{ 1+depth }}>{{ chapter.title }}</h{{ 1+depth }}>
     {%- endif -%}
-    <p>{{ chapter.content }}</p>
+    {%- if not chapter.foreword is none %}
+        <p>{{ chapter.foreword }}</p>
+    {%- endif -%}
     {% if not chapter.table is none %}
     {% set table = chapter.table %}
         <table>
@@ -47,38 +50,18 @@ p{text-align: left;}
             {% endfor %}
         </table>
     {% endif %}
-    {% for subchapter in chapter.chapters %}
-        {% if not subchapter.title is none %}
-            <h3>{{ subchapter.title }}</h3>
-            {%- if not subchapter.foreword is none %}
-                <p>{{ subchapter.foreword }}</p>
-            {% endif %}
-            {% if not subchapter.table is none %}
-                {% set table = subchapter.table %}
-                <table>
-                    <tr class='chapter_table'>
-                    {% for column in table.columns %}
-                    <th>{{column}}</th>
-                    {% endfor %}
-                    </tr>
-                    {% for index in table.index %}
-                        <tr>
-                        {% for column in table.columns %}
-                            <td>{{ table[column][index] }}</td>
-                        {% endfor %}
-                        </tr>
-                    {% endfor %}
-                </table>
-            {% endif %}
-
-            {% if not subchapter.image is none %}
-                {% set image = subchapter.image %}
-                <div><img src="{{ image }}"></div>
-            {% endif %}
-
-            <p>{{ subchapter.content }}</p>
-        {% endif %}
-    {% endfor %}
+    {% if not chapter.image is none %}
+        {% set image = chapter.image %}
+        <div><img src="{{ image }}"></div>
+    {% endif %}
+    {% if not chapter.content is none %}
+        <p>{{ chapter.content }}</p>
+    {% endif %}
+    {% if chapter.chapters.__len__() > 0 %}
+        {%- do idxs.append(loop.index) -%}
+        {{ loop(chapter.chapters) }}
+        {%- do idxs.pop() -%}
+    {% endif %}
 
 {% endfor %}
 </section>
