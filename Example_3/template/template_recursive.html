@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+</head>
+<style>
+/*body {font-size:75%;}*/
+.rich-text {max-width:960px}
+table tr td { border:1px solid #000000;padding-right: 0.5em;padding-left: 0.5em;font-size:0.9em}
+table{margin: auto; text-align:center; border-collapse: collapse}
+th{border:1px solid #000000; padding-right: 0.5em;padding-left: 0.5em}
+div{text-align: center}
+h1{font-size: 1.4em;}
+.subtitle {font-size: 1.33em;text-align: right;}
+h2{font-size: 1.2em;}
+h3{font-size: 1em;}
+div img{width:34.252em;height: auto;display:inline-block;}
+table img{max-height: 1cm}
+table + div{margin: 1.5em 0em 0em 0em;}
+p{text-align: left;}
+</style>
+<body>
+<section class = "rich-text">
+<h1>{{ document.title }}</h1>
+<p>{{ document.foreword }}</p>
+
+{%- set idxs = [0] -%}
+{% for chapter in document.chapters recursive %}
+    {%- set depth=idxs|length -%}
+    {%- if not chapter.title is none %}
+        <h{{ 1+depth }}>{{ chapter.title }}</h{{ 1+depth }}>
+    {%- endif -%}
+    {%- if not chapter.foreword is none %}
+        <p>{{ chapter.foreword }}</p>
+    {%- endif -%}
+    {% if not chapter.table is none %}
+    {% set table = chapter.table %}
+        <table>
+            <tr class='chapter_table'>
+            {% for column in table.columns %}
+            <th>{{column}}</th>
+            {% endfor %}
+            </tr>
+            {% for index in table.index %}
+                <tr>
+                {% for column in table.columns %}
+                    <td>{{ table[column][index] }}</td>
+                {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+    {% if not chapter.image is none %}
+        {% set image = chapter.image %}
+        <div><img src="{{ image }}"></div>
+    {% endif %}
+    {% if not chapter.content is none %}
+        <p>{{ chapter.content }}</p>
+    {% endif %}
+    {% if chapter.chapters.__len__() > 0 %}
+        {%- do idxs.append(loop.index) -%}
+        {{ loop(chapter.chapters) }}
+        {%- do idxs.pop() -%}
+    {% endif %}
+
+{% endfor %}
+</section>
+</body>
+</html>
